@@ -1,0 +1,475 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace CrossWord
+{
+    public partial class Form1 : Form
+    {
+        Clues clue_window = new Clues();
+        List<id_cells> idc = new List<id_cells>();
+        public String puzzle_file = Application.StartupPath + "\\Puzzles\\puzzle_1.pzl";
+
+        public static int[,] DIRS = new int[,] { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+
+        public static int nRows = 6, nCols = 8;
+        public static int gridSize = nRows * nCols;
+
+        public static int minWords = 2;
+        public static Random RANDOM = new Random();
+
+        public Form1()
+        {
+          // printResult(createWordSearch(readWords("d:\\2.txt")));
+            buildWordList();
+            InitializeComponent();
+            
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void buildWordList()
+        {
+            Grid g = new Grid();
+            g=createWordSearch(readWords("d:\\2.txt"));
+            String line = "";
+           // using (StreamReader s = new StreamReader(puzzle_file))  // read the algo's output instate
+            //{
+            //    line = s.ReadLine();
+              //  while((line= s.ReadLine()) !=null)
+               // {
+                    String[] l = line.Split('|');
+            // string ll = g.solution
+            // g.solution.Add(String.Format("{0} ({1},{2})({3},{4})", word, c, r, cc, rr));
+            int size = g.solution.Count;
+            for (int i = 0; i < size - 1; i++)
+            {
+
+                int len = g.solution[i].Length;
+
+                //Console.WriteLine(g.solution[i].ElementAt(len - 2)); // rr
+                int r2 = g.solution[i].ElementAt(len - 2);
+                //Console.WriteLine(g.solution[i].ElementAt(len - 4)); //cc
+                int c2 = g.solution[i].ElementAt(len - 4);
+               // Console.WriteLine(g.solution[i].ElementAt(len - 7));  //r
+                int r1= g.solution[i].ElementAt(len - 7);
+                //Console.WriteLine(g.solution[i].ElementAt(len - 9));  //c
+                int c1 = g.solution[i].ElementAt(len - 9);
+                string di="";
+                if (r1 == r2)
+                    di = "ACROSS";
+                else if (c1 == c2)
+                    di = "DOWN";
+
+
+                string w = Regex.Replace(g.solution[i], @"[^A-Z]+", String.Empty);
+
+                 // public id_cells(int x, int y, String d, String n, String w, String c)
+
+                idc.Add(new id_cells(r1, c1, di ,"--", w, "--" ));
+                //clue_window.clue_table.Rows.Add(new String[] { di, "--", "--" });
+
+            }
+            //}
+            //}
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Help About", " AAA ");
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            initiliazeBoard();
+            clue_window.SetDesktopLocation(this.Location.X + this.Width,this.Location.Y);
+            clue_window.StartPosition = FormStartPosition.Manual;
+
+            clue_window.Show();
+            clue_window.clue_table.AutoResizeColumns();
+
+        }
+        private void initiliazeBoard()
+        {
+            Board.BackgroundColor = Color.Black;
+            Board.DefaultCellStyle.BackColor = Color.Black;
+
+            for(int i = 0; i < 21; i++)
+                Board.Rows.Add();
+                 
+            foreach(DataGridViewColumn c in Board.Columns)
+                    c.Width = Board.Width / Board.Columns.Count;
+
+            foreach (DataGridViewRow c in Board.Rows)
+                    c.Height = Board.Height / Board.Columns.Count;
+
+            for(int row = 0; row < Board.Rows.Count; row++)
+            {
+                for(int col=0; col<Board.Columns.Count; col++)
+                {
+                    Board[col, row].ReadOnly = true;
+                }
+            }
+
+            foreach(id_cells i in idc)
+            {
+                int start_col = i.X;
+                int start_row = i.Y;
+                char[] word = i.word.ToCharArray();
+                for(int j=0;j<word.Length;j++)
+                {
+                    if (i.direction.ToUpper() == "ACROSS")
+                        formatCell(start_row, start_col + j, word[j].ToString());
+
+                    if (i.direction.ToUpper() == "DOWN")
+                        formatCell(start_row + j, start_col , word[j].ToString());
+
+                }
+            }
+
+        }
+
+        private void formatCell(int row , int col , string Letter)
+        {
+            DataGridViewCell c = Board[col, row];
+            c.Style.BackColor = Color.White;
+            c.ReadOnly = false;
+            c.Style.SelectionBackColor = Color.Cyan;
+            c.Tag = Letter;
+            
+        }
+
+        private void Form1_LocationChanged(object sender, EventArgs e)
+        {
+            clue_window.SetDesktopLocation(this.Location.X + this.Width, this.Location.Y);
+
+        }
+
+        private void Board_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                Board[e.ColumnIndex, e.RowIndex].Value = Board[e.ColumnIndex, e.RowIndex].Value.ToString().ToUpper();
+            }
+            catch { }
+
+            try
+            {
+              if(Board[e.ColumnIndex, e.RowIndex].Value.ToString().Length > 1)
+                {
+                    Board[e.ColumnIndex, e.RowIndex].Value = Board[e.ColumnIndex, e.RowIndex].Value.ToString().Substring(0, 1);
+
+                }
+            }
+            catch { }
+
+            try
+            {
+                if (Board[e.ColumnIndex, e.RowIndex].Value.ToString().Equals(Board[e.ColumnIndex, e.RowIndex].Tag.ToString().ToUpper()))
+                    Board[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.DarkGreen;
+                else
+                    Board[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.Red;
+
+            }
+            catch { }
+        }
+
+        private void openPuzzleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog o = new OpenFileDialog();
+            o.Filter = "Puzzle Files|*.pzl";
+            if(o.ShowDialog().Equals(DialogResult.OK))
+            {
+                puzzle_file = o.FileName;
+
+                Board.Rows.Clear();
+                clue_window.clue_table.Rows.Clear();
+                
+                buildWordList();
+                initiliazeBoard();
+
+           }
+        }
+
+        private void Board_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            String number = "";
+       
+            
+                if (idc.Any(c => (number = c.number) != "" && c.X == e.ColumnIndex && c.Y == e.RowIndex)) 
+                {
+                    Rectangle r = new Rectangle(e.CellBounds.X, e.CellBounds.Y, e.CellBounds.Width, e.CellBounds.Height);
+                    e.Graphics.FillRectangle(Brushes.White, r);
+                    Font f = new Font(e.CellStyle.Font.FontFamily, 7);
+                    e.Graphics.DrawString(number, f, Brushes.Black, r);
+                    e.PaintContent(e.ClipBounds);
+                    e.Handled = true;
+               }
+            
+        }
+
+        private void Board_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+
+        public static List<String> readWords(String filename)
+        {
+            int maxLength = Math.Max(nRows, nCols);
+            List<String> words = new List<String>();
+            StreamReader reader = File.OpenText("d:\\2.txt");
+            string line = reader.ReadLine();
+
+            try
+            {
+                while (line != null)
+                {
+                    String s = line;
+                    s = s.Trim();
+                    s = s.ToLower();
+                    Regex word = new Regex("^[a-z]{3," + maxLength + "}$");
+                    Match m = word.Match(s);
+                    if (m.Success)
+                    {
+                        s = s.ToUpper();
+                        words.Add(s);
+                    }
+                    line = reader.ReadLine();
+                }
+                reader.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+            return words;
+        }
+        public static void Shuffle<T>(IList<T> list, int seed)
+        {
+            var rng = new Random(seed);
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+        }
+
+        public static Grid createWordSearch(List<String> words)
+        {
+            Grid grid = null;
+            int numAttempts = 0;
+
+
+            while (++numAttempts < 10000)
+            {
+                Shuffle(words, 3245);
+                // Collections.shuffle(words);
+                words.OrderBy(item => RANDOM.Next());
+
+                grid = new Grid();
+
+                int messageLength = placeMessage(grid, "SSaurle Mobile Apps");
+                int target = gridSize - messageLength;
+                int cellsFilled = 0;
+                foreach (String word in words)
+                {
+                    cellsFilled += tryPlaceWord(grid, word);
+                    if (cellsFilled == target)
+                    {
+                        if (grid.solution.Count >= minWords)
+                        {
+                            grid.numAttempts = numAttempts;
+                            return grid;
+                        }
+                        else break;
+                    }
+                }
+            }
+            return grid;
+        }
+
+        public static int placeMessage(Grid grid, String msg)
+        {
+
+            msg = msg.ToUpper();
+            msg = Regex.Replace(msg, "^[^A-Z]", "");
+
+            int messageLength = msg.Length;
+
+            if (messageLength > 0 && messageLength < gridSize)
+            {
+                int gapSize = gridSize / messageLength;
+
+                for (int i = 0; i < messageLength; i++)
+                {
+                    int pos = i * gapSize + RANDOM.Next(gapSize);
+                    grid.cells[pos / nCols, pos % nCols] = msg[i];
+                }
+                return messageLength;
+            }
+            return 0;
+        }
+
+
+        public static int tryPlaceWord(Grid grid, String word)
+        {
+
+            for (int dir = 0; dir < (DIRS.Length / 2); dir++)
+            {
+                int randDir = RANDOM.Next(DIRS.Length / 2);
+                int randPos = RANDOM.Next(gridSize);
+
+                dir = (dir + randDir) % (DIRS.Length / 2);
+                // Console.WriteLine(dir);
+                for (int pos = 0; pos < gridSize; pos++)
+                {
+                    pos = (pos + randPos) % gridSize;
+
+                    int letterPlaced = tryLocation(grid, word, dir, pos);
+                    if (letterPlaced > 0)
+                    {
+                        return letterPlaced;
+                    }
+                }
+            }
+            return 0;
+        }
+
+        public static int tryLocation(Grid grid, String word, int dir, int pos)
+        {
+
+            int r = pos / nCols;
+            int c = pos % nCols;
+            int Length = word.Length;
+
+            if ((DIRS[dir, 0] == 1 && (Length + c) > nCols)
+                    || (DIRS[dir, 0] == -1 && (Length - 1) > c)
+                    || (DIRS[dir, 1] == 1 && (Length + r) > nRows)
+                    || (DIRS[dir, 1] == -1 && (Length - 1) > r))
+            {
+
+                return 0;
+            }
+            int i, rr, cc, overlaps = 0;
+
+            for (i = 0, rr = r, cc = c; i < Length; i++)
+            {
+                if (grid.cells[rr, cc] != 0 && grid.cells[rr, cc] != word[i])
+                {
+                    return 0;
+                }
+                cc += DIRS[dir, 0];
+                rr += DIRS[dir, 1];
+                //  System.out.println(rr + " " + cc);
+            }
+
+            for (i = 0, rr = r, cc = c; i < Length; i++)
+            {
+                if (grid.cells[rr, cc] == word[i])
+                {
+                    overlaps++;
+                }
+                else
+                {
+                    grid.cells[rr, cc] = word[i];
+                }
+                if (i < Length - 1)
+                {
+                    cc += DIRS[dir, 0];
+                    rr += DIRS[dir, 1];
+                }
+            }
+            int lettersPlaced = Length - overlaps;
+            grid.solution.Add(String.Format("{0} ({1},{2})({3},{4})", word, c, r, cc, rr));
+
+            return lettersPlaced;
+        }
+
+
+
+        public static void printResult(Grid grid)
+        {
+            if (grid == null || grid.numAttempts == 0)
+            {
+                Console.WriteLine("No grid to Display");
+                return;
+            }
+            int size = grid.solution.Count;
+            Console.WriteLine("Number of Attempts : " + grid.numAttempts);
+            Console.WriteLine("Number of Words : " + size);
+            Console.WriteLine("\n      ");
+
+            Console.WriteLine();
+
+            for (int r = 0; r < nRows; r++)
+            {
+                Console.Write("\n");
+                for (int c = 0; c < nCols; c++)
+                {
+                    Console.Write(" {0} ", grid.cells[r, c]);
+                }
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+            for (int i = 0; i < size - 1; i += 2)
+            {
+                Console.WriteLine("{0}   {1}", grid.solution[i], grid.solution[i + 1]);
+            }
+            if (size % 2 == 1)
+            {
+                Console.WriteLine(grid.solution[size - 1]);
+
+            }
+        }
+    }
+
+    public class Grid
+    {
+        public int numAttempts;
+        public char[,] cells = new char[6, 8];
+        public List<String> solution = new List<String>();
+
+    }
+
+
+    public class id_cells
+    {
+        public int X;
+        public int Y;
+        public String direction;
+        public String word;
+        public String number;
+        public String clue;
+
+        public id_cells(int x, int y, String d, String n, String w, String c)
+        {
+            this.X = x;
+            this.Y = y;
+            this.number = n;
+            this.direction = d;
+            this.word = w;
+            this.clue = c;
+
+        }
+    }
+
+  
+    
+}

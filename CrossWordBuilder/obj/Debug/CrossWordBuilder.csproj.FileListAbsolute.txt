@@ -1,0 +1,26 @@
+C:\Users\Taleb\Desktop\CrossWordEdit\CrossWordBuilder\bin\Debug\CrossWordBuilder.exe.config
+C:\Users\Taleb\Desktop\CrossWordEdit\CrossWordBuilder\bin\Debug\CrossWordBuilder.exe
+C:\Users\Taleb\Desktop\CrossWordEdit\CrossWordBuilder\bin\Debug\CrossWordBuilder.pdb
+C:\Users\Taleb\Desktop\CrossWordEdit\CrossWordBuilder\obj\Debug\CrossWordBuilder.Form1.resources
+C:\Users\Taleb\Desktop\CrossWordEdit\CrossWordBuilder\obj\Debug\CrossWordBuilder.Properties.Resources.resources
+C:\Users\Taleb\Desktop\CrossWordEdit\CrossWordBuilder\obj\Debug\CrossWordBuilder.csproj.GenerateResource.Cache
+C:\Users\Taleb\Desktop\CrossWordEdit\CrossWordBuilder\obj\Debug\CrossWordBuilder.exe
+C:\Users\Taleb\Desktop\CrossWordEdit\CrossWordBuilder\obj\Debug\CrossWordBuilder.pdb
+C:\Users\Taleb\Desktop\CrossWordEdit\CrossWordBuilder\obj\Debug\CrossWordBuilder.csprojResolveAssemblyReference.cache
+C:\Users\Taleb\Desktop\CrossWordEdit\CrossWordBuilder\bin\Debug\CrossWord.exe
+C:\Users\Taleb\Desktop\CrossWordEdit\CrossWordBuilder\bin\Debug\CrossWord.pdb
+C:\Users\Taleb\Desktop\CrossWordEdit\CrossWordBuilder\bin\Debug\CrossWord.exe.config
+C:\Users\Harry Coder\Desktop\CrossWordEdit - Copy\CrossWordBuilder\bin\Debug\CrossWordBuilder.exe.config
+C:\Users\Harry Coder\Desktop\CrossWordEdit - Copy\CrossWordBuilder\bin\Debug\CrossWordBuilder.exe
+C:\Users\Harry Coder\Desktop\CrossWordEdit - Copy\CrossWordBuilder\bin\Debug\CrossWordBuilder.pdb
+C:\Users\Harry Coder\Desktop\CrossWordEdit - Copy\CrossWordBuilder\bin\Debug\CrossWord.exe
+C:\Users\Harry Coder\Desktop\CrossWordEdit - Copy\CrossWordBuilder\bin\Debug\CrossWord.pdb
+C:\Users\Harry Coder\Desktop\CrossWordEdit - Copy\CrossWordBuilder\bin\Debug\CrossWord.exe.config
+C:\Users\Harry Coder\Desktop\CrossWordEdit - Copy\CrossWordBuilder\obj\Debug\CrossWordBuilder.csprojAssemblyReference.cache
+C:\Users\Harry Coder\Desktop\CrossWordEdit - Copy\CrossWordBuilder\obj\Debug\CrossWordBuilder.Form1.resources
+C:\Users\Harry Coder\Desktop\CrossWordEdit - Copy\CrossWordBuilder\obj\Debug\CrossWordBuilder.Properties.Resources.resources
+C:\Users\Harry Coder\Desktop\CrossWordEdit - Copy\CrossWordBuilder\obj\Debug\CrossWordBuilder.csproj.GenerateResource.cache
+C:\Users\Harry Coder\Desktop\CrossWordEdit - Copy\CrossWordBuilder\obj\Debug\CrossWordBuilder.csproj.CoreCompileInputs.cache
+C:\Users\Harry Coder\Desktop\CrossWordEdit - Copy\CrossWordBuilder\obj\Debug\CrossWordBuilder.csproj.CopyComplete
+C:\Users\Harry Coder\Desktop\CrossWordEdit - Copy\CrossWordBuilder\obj\Debug\CrossWordBuilder.exe
+C:\Users\Harry Coder\Desktop\CrossWordEdit - Copy\CrossWordBuilder\obj\Debug\CrossWordBuilder.pdb
